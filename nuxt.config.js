@@ -10,8 +10,11 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'A browser-based text adventure game ' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+      { href: "https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap", rel: "stylesheet" }
+    ],
+    bodyAttrs: {
+      class: 'body'
+    }
   },
   /*
   ** Customize the progress bar color

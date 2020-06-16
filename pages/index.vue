@@ -1,65 +1,32 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        project-arklay-vue
-      </h1>
-      <h2 class="subtitle">
-        A browser-based text adventure game 
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
-    </div>
-  </section>
+  <div class="index wrapper">
+    <h1 class="index mainTitle">Project Arklay</h1>
+    <p>Your head hurts. You&apos;re not sure where you are, and you definitely don&apos;t know how you got here. There&apos;s rain thrashing the ground all around you. You figure you might as well try and understand what the Hell is going on...</p>
+  </div>
 </template>
 
-<script>
-import AppLogo from '~/components/AppLogo.vue'
-
-export default {
-  components: {
-    AppLogo
+<style lang="scss">
+  /* This is _not_ scoped on purpose in order to style the `body` tag. Until you find a better solution for this, don't use generic names here */
+  .body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-}
-</script>
 
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+  .index {
+    &.wrapper {
+      font-family: 'Source Code Pro', monospace;
+      background-color:slategrey;
+      color: #fafafa;
+      text-align: center;
+      min-height: 90vh;
+      padding: 10vw;
+    }
 
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
+    &.mainTitle {
+      padding: 10vw 0;
+      margin: 0;
+    }
+  }
 </style>
 

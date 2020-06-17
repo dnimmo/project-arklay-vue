@@ -28,8 +28,14 @@ const store =
           message: ''
         }
       },
+
       changeRoom (state, roomKey) {
         state.data.currentRoom = state.data.rooms[roomKey]
+        state.data.message = ''
+      },
+      
+      examineRoom (state, message) {
+        state.data.message = message
       }
     },
     actions: {

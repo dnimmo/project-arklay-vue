@@ -18,7 +18,8 @@
           :text="message"
         />
         <action-button 
-          text="Examine room" 
+          text="Examine room"
+          @click.native="() => examineRoom(currentRoom.descriptionWhenExamined)"
         />
         <action-button
           text="Inventory"
@@ -61,6 +62,9 @@ export default {
     },
     changeRoom (roomKey) {
       this.$store.commit('changeRoom', roomKey)
+    },
+    examineRoom (roomKey) {
+      this.$store.commit('examineRoom', roomKey)
     }
   },
   computed: {

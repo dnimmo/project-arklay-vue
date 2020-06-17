@@ -1,26 +1,34 @@
 <template>
   <div>
-    <room-description 
-      intro="It's dark, and cold. You're soaked through. You struggle to remember where you are, let alone how you ended up here. What were you doing again?"
-      surroundings="There's a large door in front of you." 
-    />
-    <section class="lowerHalfContainer">
-      <directions />
-      <message 
-        text="Some message"
+    <div v-if="state === states.INITIAL_LOAD"> 
+      <!-- todo: make nice loading animation here -->
+      ...
+    </div>
+    <div v-else>
+      <room-description 
+        :intro="currentRoom.intro"
+        :surroundings="currentRoom.surroundings" 
       />
-      <action-button 
-        text="Examine room" 
-      />
-      <action-button
-        text="Inventory"
-      />
-      <div>
-        <action-button
-          text="Turn sound off"
+      <section class="lowerHalfContainer">
+        <directions
+          :directions="currentRoom.availableDirections"
         />
-      </div>
-    </section>
+        <message 
+          :text="message"
+        />
+        <action-button 
+          text="Examine room" 
+        />
+        <action-button
+          text="Inventory"
+        />
+        <div>
+          <action-button
+            text="Turn sound off"
+          />
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -29,6 +37,8 @@ import RoomDescription from '~/components/RoomDescription'
 import Directions from '~/components/Directions'
 import Message from '~/components/Message'
 import ActionButton from '~/components/ActionButton'
+import store, { states } from '~/store/game'
+
 
 export default {
   layout: 'main',
@@ -37,6 +47,32 @@ export default {
     Directions,
     Message,
     ActionButton
+  },
+  data () {
+    return {
+      states
+    }
+  },
+  store,
+  methods: {
+    loadRooms () {
+      this.$store.dispatch('loadRooms')
+    }
+  },
+  computed: {
+    currentRoom () {
+      return this.$store.state.data.currentRoom
+    },
+    state () {
+      return this.$store.state.name
+    },
+    message () {
+      return this.$store.state.data.message
+    }
+  },
+  created () {
+    console.log('loading')
+    this.loadRooms()
   }
 }
 </script>
@@ -45,5 +81,6 @@ export default {
   .lowerHalfContainer {
     border-top: 2px solid #fafafa;
     padding-top: 20px;
+    overflow: scroll;
   }
 </style>

@@ -2,8 +2,10 @@
   <section class="directionsContainer">
     <div class="directionsGrid">
       <action-button 
-        class="enter"
-        text="Enter"
+        v-for="direction in directions"
+        :key="direction.room"
+        :class="direction.text.toLowerCase()"
+        :text="direction.text"
       />
     </div>
   </section>  
@@ -13,6 +15,12 @@
 import ActionButton from '~/components/ActionButton'
 
 export default {
+  props: {
+    directions: {
+      type: Array,
+      required: true,
+    }
+  },
   components: {
     ActionButton
   }

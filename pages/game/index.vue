@@ -60,9 +60,11 @@ export default {
     loadRooms () {
       this.$store.dispatch('loadRooms')
     },
+
     changeRoom (roomKey) {
       this.$store.commit('changeRoom', roomKey)
     },
+
     examineRoom (roomKey) {
       this.$store.commit('examineRoom', roomKey)
     }
@@ -71,9 +73,11 @@ export default {
     currentRoom () {
       return this.$store.state.data.currentRoom
     },
+
     state () {
       return this.$store.state.name
     },
+    
     message () {
       return this.$store.state.data.message
     }

@@ -9,14 +9,15 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color:slategrey;
   }
 
   .siteWrapper {
     font-family: 'Source Code Pro', monospace;
-    background-color:slategrey;
     color: #fafafa;
     text-align: center;
-    min-height: 90vh;
     padding: 10vw;
   }
 </style>

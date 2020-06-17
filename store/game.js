@@ -28,6 +28,9 @@ const store =
           message: ''
         }
       },
+      changeRoom (state, roomKey) {
+        state.data.currentRoom = state.data.rooms[roomKey]
+      }
     },
     actions: {
       loadRooms({ commit }) {

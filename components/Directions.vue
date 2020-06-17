@@ -6,6 +6,7 @@
         :key="direction.room"
         :class="direction.text.toLowerCase()"
         :text="direction.text"
+        @click.native="changeRoomFunction(direction.room)"
       />
     </div>
   </section>  
@@ -19,6 +20,10 @@ export default {
     directions: {
       type: Array,
       required: true,
+    },
+    changeRoomFunction: {
+      type: Function,
+      required: true
     }
   },
   components: {

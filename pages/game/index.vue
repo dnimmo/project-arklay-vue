@@ -12,6 +12,7 @@
       <section class="lowerHalfContainer">
         <directions
           :directions="currentRoom.availableDirections"
+          :changeRoomFunction="changeRoom"
         />
         <message 
           :text="message"
@@ -57,6 +58,9 @@ export default {
   methods: {
     loadRooms () {
       this.$store.dispatch('loadRooms')
+    },
+    changeRoom (roomKey) {
+      this.$store.commit('changeRoom', roomKey)
     }
   },
   computed: {
@@ -71,7 +75,6 @@ export default {
     }
   },
   created () {
-    console.log('loading')
     this.loadRooms()
   }
 }

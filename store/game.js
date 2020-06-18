@@ -55,7 +55,6 @@ const store =
       },
 
       saveItems (state, items) {
-        console.log('saving items')
         state.name = 
           // Only update the state's name if rooms have been loaded
           state.data.rooms 
@@ -70,8 +69,6 @@ const store =
             itemsHeld: []
           }
         }
-
-        console.log({ state })
       },
 
       changeRoom (state, roomKey) {
@@ -79,14 +76,12 @@ const store =
         state.data.message = ''
       },
 
-      examineRoom (state, message) {
+      examineRoom (state) {
         const { currentRoom } = 
           state.data
 
         const { item } =
           currentRoom
-
-        console.log({ currentRoom })
 
         if (
           item 

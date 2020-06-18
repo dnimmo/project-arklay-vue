@@ -3,7 +3,7 @@
     <section class="inventoryContainer">
       <div
         v-for="item in items"
-        :key="item"
+        :key="item.key"
         class="itemContainer"
       >
         <action-button 

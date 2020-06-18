@@ -15,16 +15,16 @@ const itemCanBeUsed =
       availableDirections.some(
           ({ itemsThatCanBeUsed }) => 
               itemsThatCanBeUsed 
-                  ? itemsThatCanBeUsed.includes(item)
-                  : false
+                ? itemsThatCanBeUsed.includes(item)
+                : false
       );
 
 const itemHasBeenPickedUp =
   ({ item, inventory }) =>  
       inventory
-          .itemsHeld
-          .map(x => x.key)
-          .includes(item)
+        .itemsHeld
+        .map(x => x.key)
+        .includes(item)
         || inventory
             .itemsUsed
             .includes(item.key);
@@ -32,9 +32,28 @@ const itemHasBeenPickedUp =
 const itemHasBeenUsed =
   ({ item, inventory }) => 
       inventory
-          .itemsUsed
-          .map(x => x.key)
-          .includes(item);
+        .itemsUsed
+        .map(x => x.key)
+        .includes(item);
+
+const getSurroundings =
+  ({ room, inventory, items }) => {
+    const itemInRoom =
+      room.item
+
+    if (itemInRoom) {
+      return (
+        itemHasBeenPickedUp({ 
+          item: items[itemInRoom], 
+          inventory,
+        }) 
+          ? room.surroundingsWhenItemPickedUp 
+          : room.surroundings
+      )
+    }
+
+    return room.surroundings
+  }
 
 const store = 
   new Vuex.Store({
@@ -87,6 +106,13 @@ const store =
         const { itemsUsed } = 
           state.data.inventory
 
+        const surroundings = 
+          getSurroundings({ 
+            room: newRoom, 
+            inventory: state.data.inventory, 
+            items: state.data.items 
+          })
+
         state.data.currentRoom = {
           ...newRoom,
           availableDirections:
@@ -117,6 +143,8 @@ const store =
         const { currentRoom } = 
           state.data
 
+        console.log({ currentRoom })
+
         const { item } =
           currentRoom
 
@@ -128,6 +156,13 @@ const store =
           )
         ) {
           const newItem = state.data.items[item]
+
+          const updatedRoom = {
+            ...currentRoom,
+            surroundings: currentRoom.surroundingsWhenItemPickedUp
+          }
+
+          state.data.currentRoom = updatedRoom
           state.data.message = `${newItem.name} has been added to your inventory`
           state.data.inventory = {
             ...state.data.inventory, 

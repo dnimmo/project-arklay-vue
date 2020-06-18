@@ -162,12 +162,38 @@ const store =
             availableDirections: state.data.currentRoom.availableDirections 
           })
         ) {
+          const updatedItemsUsed = 
+            inventory.itemsUsed.concat(item.key)
+
+          const currentRoom = 
+            state.data.currentRoom
+
+          // update the current room to see if directions are unlocked now
+          const updatedCurrentRoom = 
+            {
+              ...currentRoom,
+              availableDirections: 
+                currentRoom.availableDirections.map(
+                  direction => ({
+                    ...direction,
+                    isUnlocked: 
+                      direction.itemsThatCanBeUsed.every(
+                        (x) =>
+                          updatedItemsUsed.includes(x)
+                    ),
+                  })
+                )
+            }
+
+          // UPDATES START
           state.name = states.DISPLAYING_DIRECTIONS
           state.data.message = item.messageWhenUsed
           state.data.inventory = {
             ...inventory,
-            itemsUsed: inventory.itemsUsed.concat(item.key)
+            itemsUsed: updatedItemsUsed
           }
+          state.data.currentRoom = updatedCurrentRoom 
+          // UPDATES END
         } else {
           state.data.message = item.messageWhenNotUsed
         }

@@ -70,7 +70,7 @@ export default {
   }
 
   .itemContainer {
-    margin-top: 2vh;
+    margin-top: 9vh;
   }
 
   .closeButton {

@@ -34,6 +34,9 @@ export default {
     border-width: 2px;
     border-color: #fafafa;
     transition: all 0.2s;
+    max-width: 50vw;
+    max-height: 60px;
+
     &:hover {
         border-color: darkslategrey;
         color: darkslategrey;

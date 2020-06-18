@@ -5,6 +5,7 @@
       ...
     </div>
     <div v-else>
+      {{ JSON.stringify($store.state.items)}}
       <room-description 
         :intro="currentRoom.intro"
         :surroundings="currentRoom.surroundings" 
@@ -20,7 +21,7 @@
           />
           <action-button 
             text="Examine room"
-            :action="() => examineRoom(currentRoom.descriptionWhenExamined)"
+            :action="examineRoom"
           />
           <action-button
             text="Inventory"
@@ -38,6 +39,8 @@
             :items="itemsHeld"
             :currentRoom="currentRoom"
             :closeFunction="closeInventory"
+            :useItemFunction="attemptToUseItem"
+            :message="message"
           />
         </div>
       </section>
@@ -57,6 +60,7 @@ export default {
   layout: 'main',
   store,
   methods: {
+    // Yes, I know you can use mapActions for this
     loadRooms () {
       this.$store.dispatch('loadRooms')
     },
@@ -69,8 +73,8 @@ export default {
       this.$store.commit('changeRoom', roomKey)
     },
 
-    examineRoom (roomKey) {
-      this.$store.commit('examineRoom', roomKey)
+    examineRoom () {
+      this.$store.commit('examineRoom')
     },
 
     openInventory () {
@@ -83,6 +87,10 @@ export default {
 
     attemptToOpenEmptyInventory () {
       this.$store.commit('attemptToOpenEmptyInventory')
+    },
+
+    attemptToUseItem (item) {
+      this.$store.commit('attemptToUseItem', item)
     },
   },
   created () {
@@ -115,7 +123,15 @@ export default {
     },
 
     itemsHeld () {
-      return []
+      const inventory =
+        this.$store.state.data.inventory
+
+      return (
+        inventory.itemsHeld.filter(
+          ({ key }) => 
+            !inventory.itemsUsed.includes(key)
+          )
+        )
     }
   }
 }

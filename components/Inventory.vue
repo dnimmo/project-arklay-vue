@@ -1,8 +1,18 @@
 <template>
   <div class="inventoryOverlay">
     <section class="inventoryContainer">
-      <p>Inventory</p>
+      <div
+        v-for="item in items"
+        :key="item"
+        class="itemContainer"
+      >
+        <action-button 
+          :action="() => useItemFunction(item)"
+          :text="item.name"
+        />
+      </div>
     </section>
+    <message :text="message" />
     <action-button 
       class="closeButton"
       :action="closeFunction"
@@ -13,6 +23,7 @@
 
 <script>
 import ActionButton from '~/components/ActionButton'
+import Message from '~/components/Message'
 
 export default {
   props: {
@@ -23,10 +34,19 @@ export default {
     items: {
       type: Array,
       required: true
+    },
+    useItemFunction: {
+      type: Function,
+      required: true
+    },
+    message: {
+      type: String,
+      required: true
     }
   },
   components: {
-    ActionButton
+    ActionButton,
+    Message
   }
 }
 </script>
@@ -47,7 +67,10 @@ export default {
     width: 100vw;
     border-top: 2px solid #fafafa;
     background-color: slategrey;
-    display: grid;
+  }
+
+  .itemContainer {
+    margin-top: 2vh;
   }
 
   .closeButton {

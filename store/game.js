@@ -10,6 +10,23 @@ const states = {
   ERROR: 'ERROR'
 }
 
+const itemHasBeenPickedUp =
+  ({ item, inventory }) =>  
+      inventory
+          .itemsHeld
+          .map(x => x.key)
+          .includes(item)
+        || inventory
+            .itemsUsed
+            .includes(item.key);
+
+const itemHasBeenUsed =
+  ({ item, inventory }) => 
+      inventory
+          .itemsUsed
+          .map(x => x.key)
+          .includes(item);
+
 const store = 
   new Vuex.Store({
     state () {
@@ -18,7 +35,7 @@ const store =
         data: {} 
       }
     },
-    
+
     mutations: {
       saveRooms (state, rooms) {
         const startingRoom = rooms['START']
@@ -30,6 +47,7 @@ const store =
             : states.INITIAL_LOAD 
 
         state.data = { 
+          ...state.data,
           rooms,
           currentRoom: startingRoom,
           message: ''
@@ -37,6 +55,7 @@ const store =
       },
 
       saveItems (state, items) {
+        console.log('saving items')
         state.name = 
           // Only update the state's name if rooms have been loaded
           state.data.rooms 
@@ -44,12 +63,15 @@ const store =
             : states.INITIAL_LOAD 
         
         state.data = {
+          ...state.data,
           items,
           inventory: {
             itemsUsed: [],
             itemsHeld: []
           }
         }
+
+        console.log({ state })
       },
 
       changeRoom (state, roomKey) {
@@ -58,7 +80,27 @@ const store =
       },
 
       examineRoom (state, message) {
-        state.data.message = message
+        const { currentRoom } = 
+          state.data
+
+        const { item } =
+          currentRoom
+
+        console.log({ currentRoom })
+
+        if (
+          item 
+          && !itemHasBeenPickedUp({ item, inventory: state.data.inventory })
+        ) {
+          const newItem = state.data.items[item]
+          state.data.message = `${newItem.name} has been added to your inventory`
+          state.data.inventory = {
+            ...state.data.inventory, 
+            itemsHeld : state.data.inventory.itemsHeld.concat(newItem)
+          }
+        } else {
+          state.data.message = currentRoom.descriptionWhenExamined
+        }
       },
 
       openInventory (state) {
@@ -73,6 +115,11 @@ const store =
 
       attemptToOpenEmptyInventory (state) {
         state.data.message = 'I\'m not carrying anything'
+      },
+
+      attemptToUseItem (state, item) {
+        console.log(item)
+        console.log(state.data.currentRoom)
       },
     },
 

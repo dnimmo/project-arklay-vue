@@ -10,6 +10,15 @@ const states = {
   ERROR: 'ERROR'
 }
 
+const itemCanBeUsed =
+  ({ item, availableDirections }) => 
+      availableDirections.some(
+          ({ itemsThatCanBeUsed }) => 
+              itemsThatCanBeUsed 
+                  ? itemsThatCanBeUsed.includes(item)
+                  : false
+      );
+
 const itemHasBeenPickedUp =
   ({ item, inventory }) =>  
       inventory
@@ -72,8 +81,36 @@ const store =
       },
 
       changeRoom (state, roomKey) {
-        state.data.currentRoom = state.data.rooms[roomKey]
+        const newRoom = 
+          state.data.rooms[roomKey]
+
+        const { itemsUsed } = 
+          state.data.inventory
+
+        state.data.currentRoom = {
+          ...newRoom,
+          availableDirections:
+            newRoom.availableDirections.map(
+              direction => ({
+                ...direction,
+                isUnlocked: 
+                  direction.itemsThatCanBeUsed.every(
+                    (x) =>
+                        itemsUsed.includes(x)
+                ),
+              })
+            )
+        }
+
         state.data.message = ''
+      },
+
+      attemptToOpenLockedRoom (state) {
+        state.data.message = 'Seems I can\'t go this way yet...'
+
+        if (state.data.inventory.itemsHeld.length > 0) {
+          state.name = states.DISPLAYING_INVENTORY          
+        } 
       },
 
       examineRoom (state) {
@@ -85,7 +122,10 @@ const store =
 
         if (
           item 
-          && !itemHasBeenPickedUp({ item, inventory: state.data.inventory })
+          && !(
+            itemHasBeenPickedUp({ item, inventory: state.data.inventory }) 
+            || itemHasBeenUsed({ item, inventory: state.data.inventory })
+          )
         ) {
           const newItem = state.data.items[item]
           state.data.message = `${newItem.name} has been added to your inventory`
@@ -113,8 +153,24 @@ const store =
       },
 
       attemptToUseItem (state, item) {
-        console.log(item)
-        console.log(state.data.currentRoom)
+        const inventory = 
+          state.data.inventory
+
+        if (
+          itemCanBeUsed({ 
+            item: item.key, 
+            availableDirections: state.data.currentRoom.availableDirections 
+          })
+        ) {
+          state.name = states.DISPLAYING_DIRECTIONS
+          state.data.message = item.messageWhenUsed
+          state.data.inventory = {
+            ...inventory,
+            itemsUsed: inventory.itemsUsed.concat(item.key)
+          }
+        } else {
+          state.data.message = item.messageWhenNotUsed
+        }
       },
     },
 

@@ -11,13 +11,13 @@
           :text="item.name"
         />
       </div>
+      <message :text="message" />
+      <action-button 
+        class="closeButton"
+        :action="closeFunction"
+        text="X"
+      />
     </section>
-    <message :text="message" />
-    <action-button 
-      class="closeButton"
-      :action="closeFunction"
-      text="X"
-    />
   </div>
 </template>
 
@@ -75,7 +75,12 @@ export default {
 
   .closeButton {
     position: absolute;
-    top: 52vh;
+    top: 2vh;
     right: 2vh;
+  }
+
+  .message {
+    min-height: 50px;
+    display: block;
   }
 </style>

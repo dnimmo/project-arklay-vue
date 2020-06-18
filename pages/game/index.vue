@@ -15,6 +15,7 @@
           <directions
             :directions="currentRoom.availableDirections"
             :changeRoomFunction="changeRoom"
+            :attemptToOpenLockedRoomFunction="attemptToOpenLockedRoom"
           />
           <message 
             :text="message"
@@ -91,6 +92,10 @@ export default {
 
     attemptToUseItem (item) {
       this.$store.commit('attemptToUseItem', item)
+    },
+    
+    attemptToOpenLockedRoom () {
+      this.$store.commit('attemptToOpenLockedRoom')
     },
   },
   created () {

@@ -1,6 +1,8 @@
 <template>
-  <!-- TODO: Add @click -->
-  <button class="button">
+  <button 
+    class="button"
+    @click="() => action()"
+  >
     {{ text }}
   </button>
 </template>
@@ -10,6 +12,10 @@ export default {
   props: {
     text: {
       type: String,
+      required: true
+    },
+    action: {
+      type: Function,
       required: true
     }
   }

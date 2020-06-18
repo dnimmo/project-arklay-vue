@@ -10,23 +10,34 @@
         :surroundings="currentRoom.surroundings" 
       />
       <section class="lowerHalfContainer">
-        <directions
-          :directions="currentRoom.availableDirections"
-          :changeRoomFunction="changeRoom"
-        />
-        <message 
-          :text="message"
-        />
-        <action-button 
-          text="Examine room"
-          @click.native="() => examineRoom(currentRoom.descriptionWhenExamined)"
-        />
-        <action-button
-          text="Inventory"
-        />
-        <div>
+        <div v-if="state === states.DISPLAYING_DIRECTIONS">
+          <directions
+            :directions="currentRoom.availableDirections"
+            :changeRoomFunction="changeRoom"
+          />
+          <message 
+            :text="message"
+          />
+          <action-button 
+            text="Examine room"
+            :action="() => examineRoom(currentRoom.descriptionWhenExamined)"
+          />
           <action-button
-            text="Turn sound off"
+            text="Inventory"
+            :action="itemsHeld.length > 0 ? openInventory : attemptToOpenEmptyInventory"
+            :class="itemsHeld.length > 0 ? 'notEmpty' : 'empty'"
+          />
+          <!-- <div>
+            <action-button
+              text="Turn sound off"
+            />
+          </div> -->
+        </div>
+        <div v-else-if="state === states.DISPLAYING_INVENTORY">
+          <inventory 
+            :items="itemsHeld"
+            :currentRoom="currentRoom"
+            :closeFunction="closeInventory"
           />
         </div>
       </section>
@@ -39,26 +50,19 @@ import RoomDescription from '~/components/RoomDescription'
 import Directions from '~/components/Directions'
 import Message from '~/components/Message'
 import ActionButton from '~/components/ActionButton'
+import Inventory from '~/components/Inventory'
 import store, { states } from '~/store/game'
-
 
 export default {
   layout: 'main',
-  components: {
-    RoomDescription,
-    Directions,
-    Message,
-    ActionButton
-  },
-  data () {
-    return {
-      states
-    }
-  },
   store,
   methods: {
     loadRooms () {
       this.$store.dispatch('loadRooms')
+    },
+
+    loadItems () {
+      this.$store.dispatch('loadItems')
     },
 
     changeRoom (roomKey) {
@@ -67,6 +71,34 @@ export default {
 
     examineRoom (roomKey) {
       this.$store.commit('examineRoom', roomKey)
+    },
+
+    openInventory () {
+      this.$store.commit('openInventory')
+    },
+
+    closeInventory () {
+      this.$store.commit('closeInventory')
+    },
+
+    attemptToOpenEmptyInventory () {
+      this.$store.commit('attemptToOpenEmptyInventory')
+    },
+  },
+  created () {
+    this.loadRooms()
+    this.loadItems()
+  },
+  components: {
+    RoomDescription,
+    Directions,
+    Message,
+    ActionButton,
+    Inventory
+  },
+  data () {
+    return {
+      states
     }
   },
   computed: {
@@ -77,13 +109,14 @@ export default {
     state () {
       return this.$store.state.name
     },
-    
+
     message () {
       return this.$store.state.data.message
+    },
+
+    itemsHeld () {
+      return []
     }
-  },
-  created () {
-    this.loadRooms()
   }
 }
 </script>
@@ -93,5 +126,9 @@ export default {
     border-top: 2px solid #fafafa;
     padding-top: 20px;
     overflow: scroll;
+  }
+
+  .empty {
+    opacity: 0.3;
   }
 </style>

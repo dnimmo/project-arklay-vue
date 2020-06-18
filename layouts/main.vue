@@ -18,6 +18,5 @@
     font-family: 'Source Code Pro', monospace;
     color: #fafafa;
     text-align: center;
-    padding: 10vw;
   }
 </style>

@@ -6,7 +6,7 @@
         :key="direction.room"
         :class="direction.text.toLowerCase()"
         :text="direction.text"
-        @click.native="changeRoomFunction(direction.room)"
+        :action="() => changeRoomFunction(direction.room)"
       />
     </div>
   </section>  

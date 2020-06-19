@@ -26,5 +26,6 @@ export default {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
+    padding: 5vw;
   }
 </style>

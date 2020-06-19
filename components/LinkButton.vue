@@ -46,6 +46,7 @@ export default {
     border-color: #fafafa;
     transition: all 0.2s;
     text-decoration: none;
+    max-width: 200px;
 
     &:hover {
         border-color: darkslategrey;

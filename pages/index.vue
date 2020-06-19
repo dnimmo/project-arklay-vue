@@ -35,6 +35,14 @@ export default {
     padding: 10vw 0;
     margin: 0;
   }
+
+  .introText {
+    padding: 5vw;
+
+      @media screen and (min-width:500px) {
+        padding: 5vw 12vw;
+      }
+  }
   
 </style>
 

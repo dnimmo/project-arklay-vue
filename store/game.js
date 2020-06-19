@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { roomsEndpoint, itemsEndpoint } from '~/properties'
 
+Vue.use(Vuex)
+
+// STATES
+
 export
 const states = {
   INITIAL_LOAD: 'INITIAL_LOAD',
@@ -9,6 +13,8 @@ const states = {
   DISPLAYING_INVENTORY: 'DISPLAYING_INVENTORY',
   ERROR: 'ERROR'
 }
+
+// FUNCTIONS
 
 const itemCanBeUsed =
   ({ item, availableDirections }) => 
@@ -23,7 +29,6 @@ const itemHasBeenPickedUp =
   ({ item, inventory }) =>  
       inventory
         .itemsHeld
-        .map(x => x.key)
         .includes(item)
         || inventory
             .itemsUsed
@@ -33,13 +38,19 @@ const itemHasBeenUsed =
   ({ item, inventory }) => 
       inventory
         .itemsUsed
-        .map(x => x.key)
         .includes(item);
 
 const getSurroundings =
   ({ room, inventory, items }) => {
     const itemInRoom =
       room.item
+
+    if (
+      !itemInRoom 
+        && inventory.itemsUsed.length === 0
+      ) {
+        return room.surroundings
+    }
 
     if (itemInRoom) {
       return (
@@ -52,8 +63,31 @@ const getSurroundings =
       )
     }
 
-    return room.surroundings
+    if (
+      room.surroundingsWhenItemUsed 
+      && inventory.itemsUsed.length > 0
+    ) {
+      const itemThatHasBeenUsed =
+        room
+          .availableDirections
+          .map(({ itemsThatCanBeUsed }) => itemsThatCanBeUsed)
+          .reduce((accumulator, current) => [
+            ...accumulator, ...current
+          ],[])
+          .find(
+            itemKey => 
+              itemHasBeenUsed({ item: itemKey, inventory })
+          )
+
+      return (
+        itemThatHasBeenUsed
+            ? room.surroundingsWhenItemUsed
+            : room.surroundings
+      )
+    }
   }
+
+// STORE
 
 const store = 
   new Vuex.Store({
@@ -99,6 +133,11 @@ const store =
         }
       },
 
+      saveError (state, error) {
+        state.name = states.ERROR,
+        state.data.message = error
+      },
+
       changeRoom (state, roomKey) {
         const newRoom = 
           state.data.rooms[roomKey]
@@ -115,6 +154,7 @@ const store =
 
         state.data.currentRoom = {
           ...newRoom,
+          surroundings,
           availableDirections:
             newRoom.availableDirections.map(
               direction => ({
@@ -143,15 +183,16 @@ const store =
         const { currentRoom } = 
           state.data
 
-        console.log({ currentRoom })
-
         const { item } =
           currentRoom
+
+        const itemToCheck =
+          state.data.items[item]
 
         if (
           item 
           && !(
-            itemHasBeenPickedUp({ item, inventory: state.data.inventory }) 
+            itemHasBeenPickedUp({ item: itemToCheck, inventory: state.data.inventory }) 
             || itemHasBeenUsed({ item, inventory: state.data.inventory })
           )
         ) {
@@ -207,6 +248,7 @@ const store =
           const updatedCurrentRoom = 
             {
               ...currentRoom,
+              surroundings: currentRoom.surroundingsWhenItemUsed,
               availableDirections: 
                 currentRoom.availableDirections.map(
                   direction => ({
@@ -220,7 +262,6 @@ const store =
                 )
             }
 
-          // UPDATES START
           state.name = states.DISPLAYING_DIRECTIONS
           state.data.message = item.messageWhenUsed
           state.data.inventory = {
@@ -228,7 +269,6 @@ const store =
             itemsUsed: updatedItemsUsed
           }
           state.data.currentRoom = updatedCurrentRoom 
-          // UPDATES END
         } else {
           state.data.message = item.messageWhenNotUsed
         }
@@ -244,8 +284,7 @@ const store =
             commit('saveRooms', JSON.parse(response.body))
           })
           .catch(e => {
-            // TODO: Commit a different action here
-            console.log(e, 'rooms')
+            commit('saveError', `Error fetching rooms: ${e.message}`)
           })
       },
 
@@ -257,8 +296,7 @@ const store =
             commit('saveItems', JSON.parse(response.body))
           })
           .catch(e => {
-            // TODO: Commit a different action here
-            console.log(e, 'items')
+            commit('saveError', `Error fetching items: ${e.message}`)
           })
       }
     }

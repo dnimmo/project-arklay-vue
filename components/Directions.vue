@@ -60,7 +60,7 @@ export default {
     min-height: 35vh;
     display: grid;
     grid-template-columns: 33.3% 33.3% 33.3%;
-    grid-template-rows: 20% 20% 20% 20% 20%;
+    grid-template-rows: 33.3% 33.3% 33.3%;
     justify-items: center;
     justify-content: space-evenly;
   }
@@ -71,37 +71,37 @@ export default {
     
   .north {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
   }
   
   .east {
     grid-column: 3;
-    grid-row: 3;
+    grid-row: 2;
   }
   
   .west {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     }
     
   .south {
     grid-column: 2;
-    grid-row: 4;
+    grid-row: 3;
   }
   
   .downstairs {
     grid-column: 2;
-    grid-row: 5;
+    grid-row: 3;
   }
   
   .enter {
     grid-column: 2;
-    grid-row: 3;
+    grid-row: 2;
   }
   
   .end {
     grid-column: 2;
-    grid-row: 3;
+    grid-row: 2;
   }
 
   .locked {

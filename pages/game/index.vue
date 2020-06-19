@@ -1,9 +1,17 @@
 <template>
   <div>
+    <!-- LOADING --> 
     <div v-if="state === states.INITIAL_LOAD"> 
       <!-- todo: make nice loading animation here -->
       ...
     </div>
+
+    <!-- ERROR -->
+    <div v-else-if="state === states.ERROR">
+      <p class="errorText">{{ message }}</p>
+    </div>
+
+    <!-- READY -->
     <div v-else>
       {{ JSON.stringify($store.state.items)}}
       <room-description 
@@ -151,5 +159,9 @@ export default {
 
   .empty {
     opacity: 0.3;
+  }
+
+  .errorText {
+    word-break: break-all;
   }
 </style>

@@ -36,6 +36,7 @@ export default {
     transition: all 0.2s;
     max-width: 50vw;
     max-height: 60px;
+    font-family: inherit;
 
     &:hover {
         border-color: darkslategrey;

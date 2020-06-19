@@ -53,14 +53,25 @@ export default {
 
 <style lang="scss" scoped>
   .inventoryOverlay {
-    height: 65vh;
+    height: 100vh;
     position: fixed;
     top: 0;
     width: 100vw;
     background-color: rgba(0,0,0,0.3);
   }
 
+  @keyframes slideUp {
+    from {
+      transform: translate3d(0, 65vh, 0)
+    }
+    to {
+      transform: translate3d(0, 0, 0)
+    }
+  }
+
   .inventoryContainer {
+    transform: translate3d(0,0,0);
+    animation: slideUp 0.3s ease-in-out;
     min-height: 50vh;
     position: fixed;
     bottom: 0;

@@ -4,12 +4,13 @@
       <action-button 
         v-for="direction in directions"
         :key="direction.room"
+        :active="!showLocked(direction)"
         :class="`${direction.text.toLowerCase()} ${showLocked(direction) ? 'locked' : 'unlocked'}`"
         :text="direction.text"
         :action="
           showLocked(direction)
             ? () => attemptToOpenLockedRoomFunction()
-            : () => changeRoomFunction(direction.room)
+            : () => changeRoomFunction({ roomKey: direction.room, selectedDirection: direction.text.toLowerCase() })
           "
       />
     </div>
@@ -34,7 +35,7 @@ export default {
     attemptToOpenLockedRoomFunction: {
       type: Function,
       required: true
-    }
+    },
   },
 
   components: {
@@ -42,8 +43,8 @@ export default {
   },
   
   methods: {
-    showLocked ({ text, isUnlocked }) {
-      return !(text.toLowerCase() === 'enter' || text.toLowerCase() === 'end') && !isUnlocked
+    showLocked ({ text, room, isUnlocked }) {
+      return !(room.toLowerCase() === 'entrance' || text.toLowerCase() === 'end') && !isUnlocked
     }
   }
 }

@@ -52,12 +52,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
   .inventoryOverlay {
     height: 100vh;
     position: fixed;
     top: 0;
     width: 100vw;
     background-color: rgba(0,0,0,0.3);
+    animation: appear 0.3s ease-in-out;
   }
 
   @keyframes slideUp {

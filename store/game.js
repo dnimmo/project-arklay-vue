@@ -112,7 +112,8 @@ const store =
           ...state.data,
           rooms,
           currentRoom: startingRoom,
-          message: ''
+          message: '',
+          lastSelectedDirection: 'start'
         }
       },
 
@@ -138,7 +139,7 @@ const store =
         state.data.message = error
       },
 
-      changeRoom (state, roomKey) {
+      changeRoom (state, { roomKey, selectedDirection }) {
         const newRoom = 
           state.data.rooms[roomKey]
 
@@ -169,6 +170,10 @@ const store =
         }
 
         state.data.message = ''
+        state.data.lastSelectedDirection = 
+          selectedDirection !== state.data.lastSelectedDirection 
+            ? selectedDirection
+            : `${selectedDirection} repeat`
       },
 
       attemptToOpenLockedRoom (state) {
@@ -207,7 +212,7 @@ const store =
           state.data.message = `${newItem.name} has been added to your inventory`
           state.data.inventory = {
             ...state.data.inventory, 
-            itemsHeld : state.data.inventory.itemsHeld.concat(newItem)
+            itemsHeld: state.data.inventory.itemsHeld.concat(newItem)
           }
         } else {
           state.data.message = currentRoom.descriptionWhenExamined

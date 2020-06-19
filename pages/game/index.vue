@@ -12,11 +12,11 @@
     </div>
 
     <!-- READY -->
-    <div v-else>
-      {{ JSON.stringify($store.state.items)}}
+    <div class="readyContainer" v-else>
       <room-description 
         :intro="currentRoom.intro"
-        :surroundings="currentRoom.surroundings" 
+        :surroundings="currentRoom.surroundings"
+        :entryDirection="lastSelectedDirection"
       />
       <section class="lowerHalfContainer">
         <div v-if="state === states.DISPLAYING_DIRECTIONS">
@@ -35,6 +35,7 @@
           <action-button
             text="Inventory"
             :action="itemsHeld.length > 0 ? openInventory : attemptToOpenEmptyInventory"
+            :active="itemsHeld.length > 0"
             :class="itemsHeld.length > 0 ? 'notEmpty' : 'empty'"
           />
           <!-- <div>
@@ -78,8 +79,8 @@ export default {
       this.$store.dispatch('loadItems')
     },
 
-    changeRoom (roomKey) {
-      this.$store.commit('changeRoom', roomKey)
+    changeRoom ({ roomKey, selectedDirection }) {
+      this.$store.commit('changeRoom', { roomKey, selectedDirection })
     },
 
     examineRoom () {
@@ -119,10 +120,14 @@ export default {
   },
   data () {
     return {
-      states
+      states, 
     }
   },
   computed: {
+    lastSelectedDirection () {
+      return this.$store.state.data.lastSelectedDirection
+    },
+
     currentRoom () {
       return this.$store.state.data.currentRoom
     },
@@ -151,6 +156,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .readyContainer {
+    overflow-x: hidden;
+  }
+
   .lowerHalfContainer {
     border-top: 2px solid #fafafa;
     padding-top: 20px;

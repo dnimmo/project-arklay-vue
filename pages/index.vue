@@ -4,7 +4,7 @@
     <p class="introText">Your head hurts. You&apos;re not sure where you are, and you definitely don&apos;t know how you got here. There&apos;s rain thrashing the ground all around you. You figure you might as well try and understand what the Hell is going on...</p>
     <link-button
       class="button"
-      to="/menu"
+      to="/game"
       text="Begin"
     />
   </div>

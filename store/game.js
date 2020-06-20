@@ -135,8 +135,13 @@ const store =
       },
 
       saveError (state, error) {
-        state.name = states.ERROR,
+        state.name = states.ERROR
         state.data.message = error
+      },
+
+      loadSaveData (state, { name, data }) {
+        state.name = name
+        state.data = data
       },
 
       changeRoom (state, { roomKey, selectedDirection }) {
@@ -163,7 +168,7 @@ const store =
                 isUnlocked: 
                   direction.itemsThatCanBeUsed.every(
                     (x) =>
-                        itemsUsed.includes(x)
+                      itemsUsed.includes(x)
                 ),
               })
             )
@@ -303,6 +308,17 @@ const store =
           .catch(e => {
             commit('saveError', `Error fetching items: ${e.message}`)
           })
+      },
+
+      saveGameData({ state }) {
+        window.localStorage.setItem('saveData', JSON.stringify(state))
+      },
+
+      loadSaveData({ commit }) {
+        const { name, data } = 
+          JSON.parse(window.localStorage.getItem('saveData'))
+
+        commit('loadSaveData', { name, data })
       }
     }
   })

@@ -129,7 +129,7 @@ export default {
       animation: slideUp 0.4s ease-in-out;
 
       .repeat {
-        animation: slideDown 0.4s ease-in-out;
+        animation: slideUp 0.4s ease-in-out;
       }
     }
 

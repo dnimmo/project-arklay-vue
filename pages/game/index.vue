@@ -71,6 +71,16 @@ export default {
   store,
   methods: {
     // Yes, I know you can use mapActions for this
+
+    // ACTIONS
+    saveGameData () {
+      this.$store.dispatch('saveGameData')
+    },
+
+    loadSaveData () {
+      this.$store.dispatch('loadSaveData')
+    },
+
     loadRooms () {
       this.$store.dispatch('loadRooms')
     },
@@ -79,6 +89,7 @@ export default {
       this.$store.dispatch('loadItems')
     },
 
+    // MUTATIONS
     changeRoom ({ roomKey, selectedDirection }) {
       this.$store.commit('changeRoom', { roomKey, selectedDirection })
     },
@@ -107,10 +118,23 @@ export default {
       this.$store.commit('attemptToOpenLockedRoom')
     },
   },
-  created () {
-    this.loadRooms()
-    this.loadItems()
+
+  mounted () {
+    const loadRequested =
+      JSON.parse(window.localStorage.getItem('loadRequested'))
+
+    if (loadRequested) {
+      this.loadSaveData()
+    } else {
+      this.loadRooms()
+      this.loadItems()
+    }
   },
+
+  updated () {
+    this.saveGameData(this.$store.state)
+  },
+
   components: {
     RoomDescription,
     Directions,
@@ -118,11 +142,13 @@ export default {
     ActionButton,
     Inventory
   },
+
   data () {
     return {
       states, 
     }
   },
+
   computed: {
     lastSelectedDirection () {
       return this.$store.state.data.lastSelectedDirection

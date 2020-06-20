@@ -7,7 +7,10 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'A browser-based text adventure game ' }
+      { hid: 'description', name: 'description', content: 'A browser-based text adventure game ' },
+      
+      { name: 'theme-color', content: '#708090'
+      }
     ],
     link: [
       { href: "https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap", rel: "stylesheet" }

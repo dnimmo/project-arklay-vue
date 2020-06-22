@@ -17,7 +17,7 @@ export default {
   layout: 'main',
   components: {
     LinkButton,
-  }
+  },
 }
 </script>
 

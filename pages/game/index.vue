@@ -38,11 +38,12 @@
             :active="itemsHeld.length > 0"
             :class="itemsHeld.length > 0 ? 'notEmpty' : 'empty'"
           />
-          <!-- <div>
+          <div>
             <action-button
-              text="Turn sound off"
+              :text="`${soundEnabled ? 'Disable' : 'Enable'} sound`"
+              :action="toggleSound"
             />
-          </div> -->
+          </div>
         </div>
         <div v-else-if="state === states.DISPLAYING_INVENTORY">
           <inventory 
@@ -59,6 +60,7 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex'
 import RoomDescription from '~/components/RoomDescription'
 import Directions from '~/components/Directions'
 import Message from '~/components/Message'
@@ -70,53 +72,25 @@ export default {
   layout: 'main',
   store,
   methods: {
-    // Yes, I know you can use mapActions for this
-
     // ACTIONS
-    saveGameData () {
-      this.$store.dispatch('saveGameData')
-    },
-
-    loadSaveData () {
-      this.$store.dispatch('loadSaveData')
-    },
-
-    loadRooms () {
-      this.$store.dispatch('loadRooms')
-    },
-
-    loadItems () {
-      this.$store.dispatch('loadItems')
-    },
+    ...mapActions([
+      'saveGameData',
+      'loadSaveData',
+      'loadRooms',
+      'loadItems',
+      'toggleSound'
+    ]),
 
     // MUTATIONS
-    changeRoom ({ roomKey, selectedDirection }) {
-      this.$store.commit('changeRoom', { roomKey, selectedDirection })
-    },
-
-    examineRoom () {
-      this.$store.commit('examineRoom')
-    },
-
-    openInventory () {
-      this.$store.commit('openInventory')
-    },
-
-    closeInventory () {
-      this.$store.commit('closeInventory')
-    },
-
-    attemptToOpenEmptyInventory () {
-      this.$store.commit('attemptToOpenEmptyInventory')
-    },
-
-    attemptToUseItem (item) {
-      this.$store.commit('attemptToUseItem', item)
-    },
-    
-    attemptToOpenLockedRoom () {
-      this.$store.commit('attemptToOpenLockedRoom')
-    },
+    ...mapMutations([
+      'changeRoom',
+      'examineRoom',
+      'openInventory',
+      'closeInventory',
+      'attemptToOpenEmptyInventory',
+      'attemptToUseItem',
+      'attemptToOpenLockedRoom',
+    ]),
   },
 
   mounted () {
@@ -152,6 +126,10 @@ export default {
   computed: {
     lastSelectedDirection () {
       return this.$store.state.data.lastSelectedDirection
+    },
+
+    soundEnabled () {
+      return this.$store.state.data.soundEnabled
     },
 
     currentRoom () {

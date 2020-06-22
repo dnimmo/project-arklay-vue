@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { roomsEndpoint, itemsEndpoint } from '~/properties'
+import audio from '~/utils/audio'
 
 Vue.use(Vuex)
 
@@ -94,7 +95,10 @@ const store =
     state () {
       return {
         name: states.INITIAL_LOAD,
-        data: {} 
+        data: {
+          soundEnabled: false
+        },
+        utils: {},
       }
     },
 
@@ -142,6 +146,18 @@ const store =
       loadSaveData (state, { name, data }) {
         state.name = name
         state.data = data
+      },
+
+      updateSoundOption (state) {
+        if (!state.data.soundEnabled) {
+          const audioPlayer = audio();
+          state.utils.audioPlayer = audioPlayer
+          state.utils.audioPlayer.play()
+          state.data.soundEnabled = true
+        } else {
+          state.utils.audioPlayer.pause()
+          state.data.soundEnabled = false;
+        }
       },
 
       changeRoom (state, { roomKey, selectedDirection }) {
@@ -319,7 +335,11 @@ const store =
           JSON.parse(window.localStorage.getItem('saveData'))
 
         commit('loadSaveData', { name, data })
-      }
+      },
+
+      toggleSound({ commit }) {
+        commit('updateSoundOption')
+      },
     }
   })
 

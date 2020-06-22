@@ -13,6 +13,13 @@ const audioPlayer =
         bgMusic.play()
       },
 
+      playSoundEffect (filepath) {
+        const effect = 
+          new Audio(filepath)
+
+        effect.play()
+      },
+
       pause () {
         bgMusic.pause();
       }

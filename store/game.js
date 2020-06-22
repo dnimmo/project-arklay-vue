@@ -86,8 +86,16 @@ const getSurroundings =
             : room.surroundings
       )
     }
+  };
+
+const handleSoundEffect =
+  ({ soundEnabled, playFunction, filepath }) => {
+    if (!soundEnabled) return
+
+    playFunction(filepath)
   }
 
+  
 // STORE
 
 const store = 
@@ -198,15 +206,21 @@ const store =
       },
 
       attemptToOpenLockedRoom (state) {
-        state.data.message = 'Seems I can\'t go this way yet...'
+        handleSoundEffect({ 
+          soundEnabled: state.data.soundEnabled, 
+          playFunction: state.utils.audioPlayer?.playSoundEffect, 
+          filepath:'/audio/failure.wav' 
+        })
 
         if (state.data.inventory.itemsHeld.length > 0) {
           state.name = states.DISPLAYING_INVENTORY          
         } 
+
+        state.data.message = 'Seems I can\'t go this way yet...'
       },
 
       examineRoom (state) {
-        const { currentRoom } = 
+        const { currentRoom, soundEnabled } = 
           state.data
 
         const { item } =
@@ -222,6 +236,12 @@ const store =
             || itemHasBeenUsed({ item, inventory: state.data.inventory })
           )
         ) {
+          handleSoundEffect({ 
+            soundEnabled, 
+            playFunction: state.utils.audioPlayer?.playSoundEffect, 
+            filepath:'/audio/success_chime.wav' 
+          })
+
           const newItem = state.data.items[item]
 
           const updatedRoom = {
@@ -236,6 +256,12 @@ const store =
             itemsHeld: state.data.inventory.itemsHeld.concat(newItem)
           }
         } else {
+          handleSoundEffect({ 
+            soundEnabled, 
+            playFunction: state.utils.audioPlayer?.playSoundEffect, 
+            filepath:'/audio/failure.wav' 
+          })
+
           state.data.message = currentRoom.descriptionWhenExamined
         }
       },
@@ -251,6 +277,12 @@ const store =
       },
 
       attemptToOpenEmptyInventory (state) {
+        handleSoundEffect({ 
+          soundEnabled: state.data.soundEnabled, 
+          playFunction: state.utils.audioPlayer?.playSoundEffect, // handling undefined because this won't exist if the player never chose to enable sound in the first place
+          filepath: `/audio/failure.wav`
+        })
+
         state.data.message = 'I\'m not carrying anything'
       },
 
@@ -264,6 +296,15 @@ const store =
             availableDirections: state.data.currentRoom.availableDirections 
           })
         ) {
+          handleSoundEffect({ 
+            soundEnabled: state.data.soundEnabled, 
+            playFunction: state.utils.audioPlayer?.playSoundEffect, // handling undefined because this won't exist if the player never chose to enable sound in the first place
+            filepath: `/audio/${item.soundWhenUsed}.wav`
+          })
+
+          const updatedItemsHeld = 
+            inventory.itemsHeld.filter(x => x !== item)
+
           const updatedItemsUsed = 
             inventory.itemsUsed.concat(item.key)
 
@@ -292,10 +333,17 @@ const store =
           state.data.message = item.messageWhenUsed
           state.data.inventory = {
             ...inventory,
+            itemsHeld: updatedItemsHeld,
             itemsUsed: updatedItemsUsed
           }
           state.data.currentRoom = updatedCurrentRoom 
         } else {
+          handleSoundEffect({ 
+            soundEnabled: state.data.soundEnabled, 
+            playFunction: state.utils.audioPlayer?.playSoundEffect, // handling undefined because this won't exist if the player never chose to enable sound in the first place
+            filepath: `/audio/failure.wav`
+          })
+          
           state.data.message = item.messageWhenNotUsed
         }
       },

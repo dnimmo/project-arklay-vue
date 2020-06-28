@@ -7,19 +7,19 @@ describe(
         test(
             'renders text that has been passed in', 
             () => {
-                const testText = "Whoop whoop"
+              const testText = "Whoop whoop"
 
-                const message = 
-                    mount(
-                        Message, 
-                        { 
-                            propsData: {
-                                text: testText
-                            }
-                        })
+              const message = 
+                mount(
+                  Message, 
+                  { 
+                    propsData: {
+                        text: testText
+                    }
+                  })
 
-                expect(message.text())
-                    .toBe(testText)
+              expect(message.text())
+                .toBe(testText)
         })
     })
 

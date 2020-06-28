@@ -9,6 +9,7 @@
         <action-button 
           :action="() => useItemFunction(item)"
           :text="item.name"
+          :data-test="item.key"
         />
       </div>
       <message :text="message" />
@@ -22,8 +23,8 @@
 </template>
 
 <script>
-import ActionButton from '~/components/ActionButton'
-import Message from '~/components/Message'
+import ActionButton from './ActionButton'
+import Message from './Message'
 
 export default {
   props: {

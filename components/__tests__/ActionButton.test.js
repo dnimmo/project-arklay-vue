@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import ActionButton from '../ActionButton.vue'
+import ActionButton from '../ActionButton'
 
 describe(
     'ActionButton', 
